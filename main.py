@@ -47,11 +47,14 @@ def main():
             params=params,
             cookies=cookies,
         )
+        if not response.ok:
+            print(f'Request failed: {response.status_code}')
         data = response.json()
         items = data["items"]
-        print(f"{len(items)} items{' '*50}", end='\r')
         if not items:
+            print(data)
             break
+        print(f"{len(items)} items{' '*50}", end='\r')
         items_count += len(items)
         parsed_new_items = {str(item["id"]): item for item in items if not transactions.get(str(item["id"]))}
         transactions.update(parsed_new_items)
